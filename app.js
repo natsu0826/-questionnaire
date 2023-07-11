@@ -30,7 +30,6 @@ app.get("/create", (req, res) => {
 app.post("/submit", (req, res) => {
   const { name, namekana, gender, email, address, tel, reason, inquiry } = req.body;
 
-
   const sql =
     "INSERT INTO userlist (name, namekana, gender, email, address, tel, reason, inquiry) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
   const values = [name, namekana, gender, email, address, tel, reason, inquiry];
