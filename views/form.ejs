@@ -3,126 +3,161 @@
     <head>
         <title>フォーム</title>
     </head>
+    <link rel="stylesheet" href="/css/styles.css">
     <body>
+        <h2>アンケートフォーム</h2>
         <form action="/submit" method="POST">
             <label for="name">名前:</label>
             <input type="text" id="name" name="name" required>
-            <span id="nameError" style="color: red;"></span><br><br>
+            <span id="nameError" class="error"></span><br><br>
             <label for="namekana">かな:</label>
             <input type="text" id="namekana" name="namekana" required>
-            <span id="namekanaError" style="color: red;"></span><br><br>
-            <label>性別:</label>
-            <input type="radio" id="male" name="gender" value="male" required>
-            <label for="male">男性</label>
-            <input type="radio" id="female" name="gender" value="female" required>
-            <label for="female">女性</label>
-            <span id="genderError" style="color: red;"></span><br><br>
+            <span id="namekanaError" class="error"></span><br><br>
+            <div class="radiobox">
+                <label for="male">男性</label>
+                <input type="radio" id="male" name="gender" value="male" required>
+                <label for="female">女性</label>
+                <input type="radio" id="female" name="gender" value="female" required>
+            </div>
+            <span id="genderError" class="error"></span><br><br>
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
-            <span id="emailError" style="color: red;"></span><br><br>
+            <span id="emailError" class="error"></span><br><br>
             <label for="addres">お住まいの住所:</label>
-            <input type="text" id="addres" name="addres" required>
-            <span id="addresError" style="color: red;"></span><br><br>
+            <input type="text" id="address" name="address" required>
+            <span id="addressError" class="error"></span><br><br>
             <label for="tel">電話番号:</label>
             <input type="text" id="tel" name="tel" required>
-            <span id="telError" style="color: red;"></span><br><br>
+            <span id="telError" class="error"></span><br><br>
             <label for="reason">理由:</label>
             <input type="text" id="reason" name="reason" required>
-            <span id="reasonError" style="color: red;"></span><br><br>
+            <span id="reasonError" class="error"></span><br><br>
             <label for="inquiry">お問合せ内容:</label>
-            <input type="text" id="inquiry" name="inquiry" required>
-            <span id="inquiryError" style="color: red;"></span><br><br>
+            <input type="textcontent" id="inquiry" name="inquiry" required>
+            <span id="inquiryError" class="error"></span><br><br>
             <input type="submit" id="submitButton" value="送信" disabled>
         </form>
         <script>
+            document.getElementById('name').addEventListener('change', validateName);
+            document.getElementById('namekana').addEventListener('change', validateNameKana);
+            document.querySelectorAll('input[name="gender"]').forEach((radio) => {
+                radio.addEventListener('change', validateGender);
+            });
+            document.getElementById('email').addEventListener('change', validateEmail);
+            document.getElementById('address').addEventListener('change', validateAddress);
+            document.getElementById('tel').addEventListener('change', validateTel);
+            document.getElementById('reason').addEventListener('change', validateReason);
+            document.getElementById('inquiry').addEventListener('change', validateInquiry);
 
-            document.getElementById('name').addEventListener('input', validateForm);
-            document.getElementById('namekana').addEventListener('input', validateForm);
-            document.getElementById('male').addEventListener('input', validateForm);
-            document.getElementById('female').addEventListener('input', validateForm);
-            document.getElementById('email').addEventListener('input', validateForm);
-            document.getElementById('addres').addEventListener('input', validateForm);
-            document.getElementById('tel').addEventListener('input', validateForm);
-            document.getElementById('reason').addEventListener('input', validateForm);
-            document.getElementById('inquiry').addEventListener('input', validateForm);
-
-            function validateForm() {
+            function validateName() {
                 const nameError = document.getElementById('nameError');
-                const namekanaError = document.getElementById('namekanaError');
-                const genderError = document.getElementById('genderError');
-                const emailError = document.getElementById('emailError');
-                const addresError = document.getElementById('addresError');
-                const telError = document.getElementById('telError');
-                const reasonError = document.getElementById('reasonError');
-                const inquiryError = document.getElementById('inquiryError');
-
                 const nameValue = document.getElementById('name').value;
-                const namekanaValue = document.getElementById('namekana').value;
-                const genderValue = document.querySelector('input[name="gender"]:checked');
-                const emailValue = document.getElementById('email').value;
-                const addresValue = document.getElementById('addres').value;
-                const telValue = document.getElementById('tel').value;
-                const reasonValue = document.getElementById('reason').value;
-                const inquiryValue = document.getElementById('inquiry').value;
-
                 nameError.textContent = '';
-                namekanaError.textContent = '';
-                genderError.textContent = '';
-                emailError.textContent = '';
-                addresError.textContent = '';
-                telError.textContent = '';
-                reasonError.textContent = '';
-                inquiryError.textContent = '';
-
-                let isValid = true;
 
                 if (!nameValue.match(/^[\u4E00-\u9FFF\u3040-\u309F\u30A0-\u30FFa-zA-Z\s]+$/)) {
                     nameError.textContent = '名前は漢字、ひらがな、英字のみ入力してください。';
-                    isValid = false;
+                    enableSubmitButton(false);
+                } else {
+                    enableSubmitButton(true);
                 }
+            }
+
+            function validateNameKana() {
+                const namekanaError = document.getElementById('namekanaError');
+                const namekanaValue = document.getElementById('namekana').value;
+                namekanaError.textContent = '';
 
                 if (!namekanaValue.match(/^[\u3040-\u309F]+$/)) {
                     namekanaError.textContent = 'かなはひらがなのみ入力してください。';
-                    isValid = false;
+                    enableSubmitButton(false);
+                } else {
+                    enableSubmitButton(true);
                 }
+            }
+
+            function validateGender() {
+                const genderError = document.getElementById('genderError');
+                const genderValue = document.querySelector('input[name="gender"]:checked');
+                genderError.textContent = '';
 
                 if (!genderValue) {
                     genderError.textContent = '性別を選択してください。';
-                    isValid = false;
+                    enableSubmitButton(false);
+                } else {
+                    enableSubmitButton(true);
                 }
+            }
+
+            function validateEmail() {
+                const emailError = document.getElementById('emailError');
+                const emailValue = document.getElementById('email').value;
+                emailError.textContent = '';
 
                 if (!emailValue.match(/^[\w\.-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/)) {
                     emailError.textContent = '正しいメールアドレスの形式で入力してください。';
-                    isValid = false;
+                    enableSubmitButton(false);
+                } else {
+                    enableSubmitButton(true);
                 }
+            }
 
-                if (!addresValue.match(/^[\u4E00-\u9FFF\u3040-\u309F0-9\s]+$/)) {
-                    addresError.textContent = 'お住まいの住所は漢字、ひらがな、数字のみ入力してください。';
-                    isValid = false;
+            function validateAddress() {
+                const addressError = document.getElementById('addressError');
+                const addressValue = document.getElementById('address').value;
+                addressError.textContent = '';
+
+                if (!addressValue.match(/^[\u4E00-\u9FFF\u3040-\u309F0-9\s]+$/)) {
+                    addressError.textContent = 'お住まいの住所は漢字、ひらがな、数字のみ入力してください。';
+                    enableSubmitButton(false);
+                } else {
+                    enableSubmitButton(true);
                 }
+            }
+
+            function validateTel() {
+                const telError = document.getElementById('telError');
+                const telValue = document.getElementById('tel').value;
+                telError.textContent = '';
 
                 if (!telValue.match(/^\d+$/)) {
                     telError.textContent = '電話番号はハイフンなしの数字のみで入力してください。';
-                    isValid = false;
+                    enableSubmitButton(false);
+                } else {
+                    enableSubmitButton(true);
                 }
+            }
+
+            function validateReason() {
+                const reasonError = document.getElementById('reasonError');
+                const reasonValue = document.getElementById('reason').value;
+                reasonError.textContent = '';
 
                 if (!reasonValue) {
                     reasonError.textContent = '理由を入力してください。';
-                    isValid = false;
+                    enableSubmitButton(false);
+                } else {
+                    enableSubmitButton(true);
                 }
+            }
+
+            function validateInquiry() {
+                const inquiryError = document.getElementById('inquiryError');
+                const inquiryValue = document.getElementById('inquiry').value;
+                inquiryError.textContent = '';
 
                 if (!inquiryValue) {
                     inquiryError.textContent = 'お問合せ内容を入力してください。';
-                    isValid = false;
+                    enableSubmitButton(false);
+                } else {
+                    enableSubmitButton(true);
                 }
-
-                enableSubmitButton(isValid);
             }
 
             function enableSubmitButton(enable) {
                 const submitButton = document.getElementById('submitButton');
                 submitButton.disabled = !enable;
             }
+
 
         </script>
     </body>

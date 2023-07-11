@@ -6,6 +6,7 @@ const app = express();
 const mysql = require("mysql2");
 const port = 3000;
 
+app.use(express.static("assets"));
 app.use(express.static("views"));
 app.set("view engine", "ejs");
 
@@ -15,6 +16,7 @@ const con = mysql.createConnection({
   password: "rootroot",
   database: "aq_db",
 });
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -26,12 +28,12 @@ app.get("/create", (req, res) => {
 
 
 app.post("/submit", (req, res) => {
-  const { name, namekana, gender, email, addres, tel, reason, inquiry } = req.body;
+  const { name, namekana, gender, email, address, tel, reason, inquiry } = req.body;
 
 
   const sql =
-    "INSERT INTO userlist (name, namekana, gender, email, addres, tel, reason, inquiry) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-  const values = [name, namekana, gender, email, addres, tel, reason, inquiry];
+    "INSERT INTO userlist (name, namekana, gender, email, address, tel, reason, inquiry) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+  const values = [name, namekana, gender, email, address, tel, reason, inquiry];
 
   con.query(sql, values, function (err, result, fields) {
     if (err) throw err;
